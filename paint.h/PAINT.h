@@ -2,14 +2,15 @@
 // Last Update on 2019/5/4
 // Unfinished
 
-#ifndef __GUI_PAINT
-#define __GUI_PAINT
+#ifndef __GDI_PAINT
+#define __GDI_PAINT
 
 #include<windows.h>
-#include<bits/stdc++.h>
-using namespace std;
+#include<cmath>
+#include<iostream>
+#include<ctime>
 
-const double PI = acos(-1);
+const double PI = std::acos(-1);
 void RotateAnyAngle(HDC hdcDest,int placex,int placey,int SrcWidth,int SrcHeight,HDC hdcSrc,int nXOriginSrc,int nYOriginSrc,float Angle,bool Middle,COLORREF clrBack,bool Trans);
 void Char_Print(HDC hdcDest,int nXOriginDest,int nYOriginDest,int nWidthDest,int nHeightDest,HFONT hf,COLORREF crTransparent,const char* wanna_char);
 float Get_FPS();
@@ -46,7 +47,7 @@ class DC {
 		
 		void select(IMG* t);
 		
-		void draw(DC* t, int x, int y, int px = 0, int py = 0);
+		void draw(DC* t, int x, int y);
 		void draw(DC* t, int x, int y, int w, int h, int px = 0, int py = 0);
 		void draw(DC* t, int x, int y, IMG* i);
 		
@@ -185,8 +186,8 @@ void DC::set(DC* t) { if(ready) remove(); *this = *CreateDC(t, t->width, t->heig
 
 void DC::select(IMG* t) { SelectObject(dc, t->img);}
 
-void DC::draw(DC* t, int x, int y, int px, int py) {
-	BitBlt(dc, x, y, t->width, t->height, t->dc, px, py, SRCCOPY);
+void DC::draw(DC* t, int x, int y) {
+	BitBlt(dc, x, y, t->width, t->height, t->dc, 0, 0, SRCCOPY);
 }
 void DC::draw(DC* t, int x, int y, int w, int h, int px, int py) {
 	BitBlt(dc, x, y, w, h, t->dc, px, py, SRCCOPY);
@@ -282,7 +283,7 @@ void DC::brush(HBRUSH c) {
 
 void DC::print(int x1, int y1, int x2, int y2, char* p, COLORREF c, int size) {
 	Char_Print(dc, x1, y1, x2 - x1, y2 - y1,
-	           CreateFont(size, 0, 0, 0, FW_DONTCARE, 0, 0, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, "Î¢ÈíÑÅºÚ")
+	           CreateFont(size, 0, 0, 0, FW_DONTCARE, 0, 0, 0, DEFAULT_CHARSET, OUT_OUTLINE_PRECIS, CLIP_DEFAULT_PRECIS, CLEARTYPE_QUALITY, VARIABLE_PITCH, "Î¢ï¿½ï¿½ï¿½Åºï¿½")
 	           , c, p);
 }
 
@@ -303,10 +304,10 @@ void RotateAnyAngle(HDC hdcDest,int placex,int placey,int SrcWidth,int SrcHeight
 	int y2 = (int)(SrcHeight * cosine - SrcWidth * sine);
 	int x3 = (int)(SrcWidth * cosine);
 	int y3 = (int)(-SrcWidth * sine);
-	int minx = min(0,min(x1, min(x2,x3)));
-	int miny = min(0,min(y1, min(y2,y3)));
-	int maxx = max(0,max(x1, max(x2,x3)));
-	int maxy = max(0,max(y1, max(y2,y3)));
+	int minx = std::min(0,std::min(x1, std::min(x2,x3)));
+	int miny = std::min(0,std::min(y1, std::min(y2,y3)));
+	int maxx = std::max(0,std::max(x1, std::max(x2,x3)));
+	int maxy = std::max(0,std::max(y1, std::max(y2,y3)));
 	int w = maxx - minx;
 	int h = maxy - miny;
 
@@ -374,7 +375,7 @@ float Get_FPS() {
 	static float  lastTime = 0.0f;
 
 	frameCount++;
-	currentTime = clock()*0.001f;
+	currentTime = std::clock()*0.001f;
 
 	if(currentTime - lastTime > 1.0f) {
 		fps = (float)frameCount /(currentTime - lastTime);
